@@ -54,21 +54,18 @@ export class AppComponent {
   constructor(private http: HttpClient) { }
 
   generateCsv() {
-    this.http.get<any>(this.jsonResults).subscribe(results => {
-      const data: Data[] = results.data
+    this.http.get<any>(this.jsonResults).subscribe(json => {
+      const data: any[] = json.data;
       const targetLevels = [this.roleLevel + 1, this.roleLevel - 1];
 
       for(const element of data) {
-        if (this.projectStatus == null || element.status?.includes(this.projectStatus)) {
-          console.log(element);
-          if (this.billable == null || element.billable?.includes(this.billable)) {
-            if (this.owningOrg == null || element.owningOrg?.includes(this.owningOrg)) {
-              if (this.roleLevel == null || element.fromLevel == this.roleLevel || element.toLevel == this.roleLevel || targetLevels.includes(element.fromLevel) || targetLevels.includes(element.toLevel)) {
-                if (this.startDate == null || element.startDate?.includes(this.startDate)) {
-                  if (this.llpOrAfs == null || element.roleDTE?.includes(this.llpOrAfs)) {
-                    if (this.roleClearance == null || element.roleClearance?.includes(this.roleClearance)) {
-                      this.filteredResult.push(element);
-                    }
+        if (this.projectStatus == null || element.resultItem.status?.includes(this.projectStatus)) {
+          if (this.billable == null || element.resultItem.billable?.includes(this.billable)) {
+            if (element.resultItem.fromLevel == this.roleLevel || element.resultItem.toLevel == this.roleLevel || targetLevels.includes(element.resultItem.fromLevel) || targetLevels.includes(element.resultItem.toLevel)) {
+              if (this.startDate == null || element.resultItem.startDate?.includes(this.startDate)) {
+                if (this.llpOrAfs == null || element.resultItem.roleDTE?.includes(this.llpOrAfs)) {
+                  if (this.roleClearance == null || element.resultItem.roleClearance?.includes(this.roleClearance)) {
+                    this.filteredResult.push(element.resultItem);
                   }
                 }
               }
@@ -76,6 +73,59 @@ export class AppComponent {
           }
         }
       }
+      this.export();
     })  
+  }
+
+  export() {
+    const headerList = ['number', 'title', 'fromLevel', 'toLevel', 'status', 'billable', 'startDate', 'projectName', 'roleClearance'];
+    const csvData = this.convertToCSV(this.filteredResult, headerList);
+    this.downloadCSV(csvData, 'results.csv');
+  }
+
+  convertToCSV(objArray: any[], headerList: string[]): string {
+    const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
+    let str = '';
+    let row = 'S.No,';
+
+    for (const header of headerList) {
+      row += header + ',';
+    }
+    row = row.slice(0, -1);
+    str += row + '\r\n';
+
+    for (let i = 0; i < array.length; i++) {
+      let line = (i + 1) + '';
+      for (const header of headerList) {
+        let value = array[i][header] !== undefined ? array[i][header] : '';
+        value = this.escapeCSVValue(value);
+        line += ',' + value;
+      }
+      str += line + '\r\n';
+    }
+    return str;
+  }
+
+  downloadCSV(csvData: string, filename: string) {
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('style', 'display:none;');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  escapeCSVValue(value: any): string {
+    if (value === null || value === undefined) {
+      return '';
+    }
+    value = value.toString();
+    if (value.includes(',') || value.includes('\n')) {
+      value = `"${value.replace(/"/g, '""')}"`; // Escape double quotes by doubling them
+    }
+    return value;
   }
 }
