@@ -78,7 +78,7 @@ export class AppComponent {
   }
 
   export() {
-    const headerList = ['number', 'title', 'fromLevel', 'toLevel', 'status', 'billable', 'startDate', 'projectName', 'roleClearance'];
+    const headerList = ['number', 'title', 'fromLevel', 'toLevel', 'status', 'billable', 'startDate', 'acceptingResumes', 'locationType', 'projectName', 'roleClearance'];
     const csvData = this.convertToCSV(this.filteredResult, headerList);
     this.downloadCSV(csvData, 'results.csv');
   }
