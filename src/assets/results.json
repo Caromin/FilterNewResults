@@ -1,3 +1,31 @@
 {
-    
+    "data": [
+        {
+            "score": 0.7153842449188232,
+            "resultItem": {
+                "class": "paris.web.app.RequisitionMeta",
+                "id": 548623,
+                "number": "5288829",
+                "title": "Microsoft Mid Developer - .Net",
+                "projectName": "Lionfish",
+                "client": "US Department of Homeland Security",
+                "status": "Open - In Process",
+                "locationPath": "South > USA > South > Washington, D.C.",
+                "locationRadius": "In Town",
+                "workLocation": "Remote",
+                "primaryContact": "Lord,Terrianne",
+                "billable": "Chargeable - Sold",
+                "owningOrg": "AFS",
+                "fromLevel": 8,
+                "toLevel": 8,
+                "startDate": "2024-06-18",
+                "createDate": "2024-04-23",
+                "roleDTE": "AFS Platforms",
+                "roleClearance": "Public Trust",
+                "locationType": "Remote",
+                "acceptingResumes": "Y",
+                "percentOnsite": 0
+            }
+        }
+    ]
 }
