@@ -10,36 +10,39 @@ export class AppComponent {
   title = 'FilterNewResults';
   private jsonResults = 'assets/results.json';
 
-  private projectStatus: any = null;
-  private billable: any= null;
-  private owningOrg: any= null;
-  private roleLevel = 9;
-  private startDate: any= null;
-  private llpOrAfs: any= null;
-  private roleClearance: any= null;
-  private roleDTE = 'AFS';
+  public statuses = ["Open - In Process", "Open - New", "Open - Need Project Feedback", "Open - Confirming Candidate"];
+  public billables = ["Chargeable - Sold", "Chargeable - Unsold", "Not Chargeable - Sold", "Not Chargeable - Unsold"];
+  public orgs = ["AFS", "LLP"];
+  public levels = [12, 11, 10, 9, 8, 7, 6, 5];
+  public clearances = ["Clearance Not Applicable", "Public Trust", "Secret", "Top Secret", "TS/SCI","TS/SCI/CI", "TS/SCI/FS", "Unknown"];
+
+  protected projectStatus: any = null;
+  protected billable: any= null;
+  protected roleDTE: any= null;
+  protected roleLevel = 9;
+  protected roleClearance: any= null;
 
   public filteredResult: object[] = [];
 
   constructor(private http: HttpClient) { }
 
   generateCsv() {
+    this.filteredResult = [];
+
     this.http.get<any>(this.jsonResults).subscribe(json => {
-      console.log(json);
       const data: any[] = json.data;
-      const targetLevels = [this.roleLevel + 1, this.roleLevel - 1];
+      let targetLevels: any = null;
+      if (this.roleLevel) {
+        targetLevels = [this.roleLevel + 1, this.roleLevel - 1];
+      }
 
       for(const element of data) {
         if (this.projectStatus == null || element.resultItem.status?.includes(this.projectStatus)) {
           if (this.billable == null || element.resultItem.billable?.includes(this.billable)) {
-            if (element.resultItem.fromLevel == this.roleLevel || element.resultItem.toLevel == this.roleLevel || targetLevels.includes(element.resultItem.fromLevel) || targetLevels.includes(element.resultItem.toLevel)) {
-              if (this.startDate == null || element.resultItem.startDate?.includes(this.startDate)) {
-                if (this.llpOrAfs == null || element.resultItem.roleDTE?.includes(this.llpOrAfs)) {
-                  if (this.roleClearance == null || element.resultItem.roleClearance?.includes(this.roleClearance)) {
-                    if (element.resultItem.roleDTE?.includes(this.roleDTE)) {
-                      this.filteredResult.push(element.resultItem);
-                    }
-                  }
+            if (targetLevels == null || element.resultItem.fromLevel == this.roleLevel || element.resultItem.toLevel == this.roleLevel || targetLevels.includes(element.resultItem.fromLevel) || targetLevels.includes(element.resultItem.toLevel)) {
+              if (this.roleClearance == null || element.resultItem.roleClearance?.includes(this.roleClearance)) {
+                if (element.resultItem.roleDTE?.includes(this.roleDTE)) {
+                  this.filteredResult.push(element.resultItem);
                 }
               }
             }

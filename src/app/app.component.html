@@ -1,3 +1,42 @@
+<div class="container mt-5">
+  <form>
+    <mat-form-field class="mx-2 minWidth">
+      <mat-label>CL Levels</mat-label>
+      <select matNativeControl name="roleLevel" [(ngModel)]="roleLevel" title="Levels">
+        <option [value]="null" title="None">All</option>
+        <option *ngFor="let level of levels" [value]="level" [title]="level">{{level}}</option>
+      </select>
+    </mat-form-field>
+    <mat-form-field class="mx-2 minWidth">
+      <mat-label>Clearance</mat-label>
+      <select matNativeControl name="roleClearance" [(ngModel)]="roleClearance" title="Clearance">
+        <option [value]="null" title="None">All</option>
+        <option *ngFor="let clearance of clearances" [value]="clearance" [title]="clearance">{{clearance}}</option>
+      </select>
+    </mat-form-field>
+    <mat-form-field class="mx-2 minWidth">
+      <mat-label>Organizations</mat-label>
+      <select matNativeControl name="roleDTE" [(ngModel)]="roleDTE" title="Organizations">
+        <option [value]="null" title="None">All</option>
+        <option *ngFor="let org of orgs" [value]="org" [title]="org">{{org}}</option>
+      </select>
+    </mat-form-field>
+    <mat-form-field class="mx-2 minWidth">
+      <mat-label>Statuses</mat-label>
+      <select matNativeControl name="projectStatus" [(ngModel)]="projectStatus" title="Statuses">
+        <option [value]="null" title="None">All</option>
+        <option *ngFor="let status of statuses" [value]="status" [title]="status">{{status}}</option>
+      </select>
+    </mat-form-field>
+    <mat-form-field class="mx-2 minWidth">
+      <mat-label>Billable</mat-label>
+      <select matNativeControl name="billable" [(ngModel)]="billable" title="Billables">
+        <option [value]="null" title="None">All</option>
+        <option *ngFor="let bill of billables" [value]="bill" [title]="bill">{{bill}}</option>
+      </select>
+    </mat-form-field>
+  </form>
+</div>
 <div class="container text-center mt-5">
   <button class="btn btn-primary w-25" title="Generate CSV" (click)="generateCsv()">Generate CSV</button>
 </div>
